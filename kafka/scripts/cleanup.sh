@@ -1,0 +1,1 @@
+java -cp zookeeper-3.4.6.jar:lib/slf4j-api-1.6.1.jar:lib/slf4j-log4j12-1.6.1.jar:lib/log4j-1.2.16.jar:conf org.apache.zookeeper.server.PurgeTxnLog /usr/local/zookeeper-3.4.6/data /usr/local/zookeeper-3.4.6/logs -n 3
