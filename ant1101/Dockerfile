@@ -1,4 +1,4 @@
-FROM xiechuan/tomcat8:1.0.1
+FROM xiechuan/tomcat8:1.0.0
 MAINTAINER xiechuan  <xiechuanj@gmail.com>
 
 ENV ANT_VERSION=1.10.1

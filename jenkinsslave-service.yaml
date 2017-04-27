@@ -2,14 +2,14 @@ kind: Service
 apiVersion: v1  
 metadata:  
   labels:  
-      app: centos721511jenkinsslave  
-  name: centos721511jenkinsslave
+      app: ibis2 
+  name: ibis2
 spec:  
   ports:  
   - port: 8080  
     targetPort: 8080 
-    nodePort: 30081 
+    nodePort: 40081
     name: tomcat  
   type: NodePort
   selector:  
-    app: centos721511jenkinsslave  
+    app: ibis2
