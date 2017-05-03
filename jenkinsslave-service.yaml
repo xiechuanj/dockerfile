@@ -2,14 +2,18 @@ kind: Service
 apiVersion: v1  
 metadata:  
   labels:  
-      app: ibis2 
-  name: ibis2
+      app: ibis1 
+  name: ibis1
 spec:  
   ports:  
   - port: 8080  
     targetPort: 8080 
-    nodePort: 40081
+    nodePort: 40001
     name: tomcat  
+  - port: 8082
+    targetPort: 8082
+    nodePort: 40002
+    name: socket
   type: NodePort
   selector:  
-    app: ibis2
+    app: ibis1

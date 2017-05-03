@@ -33,6 +33,6 @@ RUN nohup java -cp KafkaOffsetMonitor-assembly-0.2.1.jar com.quantifind.kafka.of
 
 RUN chmod 777 /usr/local/kafka/start.sh
 WORKDIR  /usr/local/kafka/
-
-
-ENTRYPOINT /usr/local/zookeeper-3.4.6/bin/zkServer.sh start && ./start.sh && ping localhost
+COPY kafka-create-topic.sh ./
+RUN chmod +x kafka-create-topic.sh
+ENTRYPOINT /usr/local/zookeeper-3.4.6/bin/zkServer.sh start && ./start.sh && ./kafka-create-topic.sh &&  ping localhost

@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1  
 kind: Deployment  
 metadata:  
-  name: ibis2
+  name: ibis1
 spec:  
   replicas: 1  
   strategy:  
@@ -12,17 +12,21 @@ spec:
   template:  
     metadata:  
       labels:  
-        app: ibis2
+        app: ibis1
     spec:  
       containers:  
-      - name: ibis2 
+      - name: ibis1 
         image: xiechuan/centos721511jenkinsslave:1.0.0
         imagePullPolicy: IfNotPresent  
         env:
           - name: jenkinsParas
-            value: "{'jenkinsUrl':'http://jenkins:8080','username':'admin','password':'admin123','nodename':'ibis2'}"
+            value: "{'jenkinsUrl':'http://jenkins:8080','username':'admin','password':'admin','nodename':'ibis1'}"
         ports:  
         - containerPort: 8080  
           name: tomcat 
           protocol: TCP  
+        - containerPort: 8082
+          name: socket
+          protocol: TCP
+
 
