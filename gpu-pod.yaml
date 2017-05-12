@@ -1,0 +1,23 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: gpu-ubuntu
+spec:
+  containers:
+  - name: gpu-ubuntu
+    image: xiechuan/cudaubuntu:1.0.0
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        alpha.kubernetes.io/nvidia-gpu: 1
+      limits:
+        alpha.kubernetes.io/nvidia-gpu: 1
+    volumeMounts:
+    - name: nvidia-driver-367-48
+      mountPath: /usr/local/nvidia
+      readOnly: true
+  restartPolicy: Never
+  volumes:
+  - name: nvidia-driver-367-48
+    hostPath:
+      path: /var/lib/nvidia-docker/volumes/nvidia_driver/367.48

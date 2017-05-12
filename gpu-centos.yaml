@@ -1,0 +1,26 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: gpu-centos
+spec:
+  containers:
+  - name: gpu-centos
+    image: xiechuan/cudaruntime:1.0.0
+    imagePullPolicy: IfNotPresent
+    command: 
+      - sleep
+      - "3600"
+    resources:
+      requests:
+        alpha.kubernetes.io/nvidia-gpu: 1
+      limits:
+        alpha.kubernetes.io/nvidia-gpu: 1
+    volumeMounts:
+    - name: nvidia-driver-367-48
+      mountPath: /usr/local/nvidia
+      readOnly: true
+  restartPolicy: Never
+  volumes:
+  - name: nvidia-driver-367-48
+    hostPath:
+      path: /var/lib/nvidia-docker/volumes/nvidia_driver/367.48

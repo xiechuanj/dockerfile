@@ -1,16 +1,16 @@
-FROM centos:7.2.1511
+FROM xiechuan/kafka:1.0.0
 MAINTAINER xiechuan  <xiechuanj@gmail.com>
 
-ENV tracker_server="127.0.0.1"
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 ENV datadir="/fastdata"
 ENV my_group="group0"
 
-
 WORKDIR /root
-
-COPY *  ./
-RUN yum install wget gcc gcc-c++ vim unzip openssl-devel net-tools make -y && chmod +x start.sh
-RUN wget https://github.com/happyfish100/fastdfs/archive/V5.08.tar.gz
+COPY *.tar.gz ./
+RUN yum install -y yum-plugin-ovl
+RUN yum install wget gcc gcc-c++ vim unzip openssl-devel net-tools make -y
 RUN set -x \
     && wget https://github.com/happyfish100/fastdfs/archive/V5.08.tar.gz  \
     && tar zxvf libfastcommon-master.tar.gz && tar zxvf V5.08.tar.gz \
@@ -19,23 +19,16 @@ RUN set -x \
     && cd ../fastdfs-5.08/ \
     && ./make.sh && ./make.sh install \
     && cd /etc/fdfs/ \
-    && cp client.conf.sample client.conf \
-    && cp storage.conf.sample storage.conf \
-    && cp tracker.conf.sample tracker.conf \
-    && mkdir -p $datadir \
-    && cores=`grep 'core id'  /proc/cpuinfo | sort -u | wc -l` \
-    && tracker_server=`ifconfig |grep inet|grep -v '127.0.0.1'|awk '{print $2}'` \
-    && sed -i "s#base_path=.*#base_path=$datadir#g" /etc/fdfs/tracker.conf \
-    && sed -i "s#work_threads=.*#work_threads=$cores#g" /etc/fdfs/tracker.conf \
-    && sed -i "s#base_path=.*#base_path=$datadir#g" /etc/fdfs/storage.conf \
-    && sed -i "s#work_threads=.*#work_threads=$cores#g" /etc/fdfs/storage.conf \
-    && sed -i "s#store_path0=.*#store_path0=$datadir#g" /etc/fdfs/storage.conf \
-    && sed -i "s#^store_group=.*#store_group=$my_group#g" /etc/fdfs/tracker.conf \
-    && sed -i "s#^group_name=.*#group_name=$my_group#g" /etc/fdfs/storage.conf \
-    && sed -i "s#base_path=.*#base_path=$datadir#g" /etc/fdfs/client.conf
-  
-
-
+    && mkdir -p $datadir
 
 WORKDIR /root
+RUN tar zxvf nginx-1.10.0.tar.gz -C /usr/local/ 
+  
+COPY client.conf storage.conf tracker.conf mod_fastdfs.conf /etc/fdfs/
+COPY nginx.conf /usr/local/nginx-1.10.0/conf/nginx.conf
+COPY http.conf /etc/fdfs/
+COPY mime.types /etc/fdfs/
+
+COPY start.sh ./
+RUN chmod +x start.sh
 ENTRYPOINT ./start.sh
