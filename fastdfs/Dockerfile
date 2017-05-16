@@ -1,11 +1,7 @@
-FROM xiechuan/kafka:1.0.0
+FROM 192.168.10.96/xiechuan/kafka:1.0.0
 MAINTAINER xiechuan  <xiechuanj@gmail.com>
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
 ENV datadir="/fastdata"
-ENV my_group="group0"
 
 WORKDIR /root
 COPY *.tar.gz ./

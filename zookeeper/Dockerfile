@@ -1,4 +1,4 @@
-FROM xiechuan/oraclejdk8u112:1.0.0
+FROM 192.168.10.96/xiechuan/oraclejdk8u112:1.0.0
 MAINTAINER xiechuan  <xiechuanj@gmail.com>
 
 
@@ -9,3 +9,4 @@ RUN set -x \
     && mkdir -p /usr/local/zookeeper-3.4.6/logs
 
 COPY zoo.cfg  /usr/local/zookeeper-3.4.6/conf/
+CMD ["/usr/sbin/init"]

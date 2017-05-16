@@ -1,6 +1,7 @@
 FROM centos:7.2.1511
 MAINTAINER xiechuan  <xiechuanj@gmail.com>
 
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 # Systemd is included in the centos 7 base containers, but it is not active by default. 
 RUN yum -y swap -- remove fakesystemd -- install systemd systemd-libs
 RUN yum -y update; yum clean all; \
