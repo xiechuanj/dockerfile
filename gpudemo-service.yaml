@@ -1,0 +1,19 @@
+kind: Service  
+apiVersion: v1  
+metadata:  
+  labels:  
+      app: gpudemo 
+  name: gpudemo
+spec:  
+  ports:  
+  - port:  
+    targetPort:  
+    nodePort: 
+    name: tomcat  
+  - port: 
+    targetPort: 
+    nodePort: 
+    name: socket
+  type: NodePort
+  selector:  
+    app: gpudemo 

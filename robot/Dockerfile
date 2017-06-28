@@ -1,0 +1,46 @@
+FROM xiechuan/jdk8u113:latest
+MAINTAINER xiechuan  <xiechuanj@gmail.com>
+
+RUN yum -y update && yum install -y yum-plugin-ovl
+RUN yum install -y git  chmod && wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm -rf get-pip.py
+
+#中文支持
+RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime #修改时区
+RUN yum -y install kde-l10n-Chinese && yum -y reinstall glibc-common #安装中文支持
+RUN localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 #配置显示中文
+ENV LC_ALL zh_CN.utf8 #设置环境变量
+
+
+
+#install xvfb and fonts module
+RUN yum install -y xorg-x11-server-Xvfb firefox Xorg
+#install robotframework selenium and reference libs
+RUN pip install -U django djangorestframework robotframework robotframework-ride \
+    robotframework-selenium2library  robotframework-databaselibrary requests robotframework-requests \
+    robotframework-appiumlibrary robotframework-ftplibrary  robotframework-sudslibrary
+RUN pip install -U python-jenkins
+#install Chinese fonts
+RUN yum -y groupinstall "Fonts"
+#install chrome
+COPY chromedriver /usr/bin/
+COPY google-chrome-stable_current_x86_64.rpm /tmp/
+RUN  yum localinstall -y /tmp/google-chrome-stable_current_x86_64.rpm
+COPY chrome_launcher.sh /opt/google/chrome/google-chrome
+RUN chmod u+x /usr/bin/chromedriver /opt/google/chrome/google-chrome
+RUN rm /tmp/google-chrome-stable_current_x86_64.rpm
+
+RUN yum clean all
+
+#install firefox driver
+ADD geckodriver-v0.16.1-linux64.tar.gz /usr/bin/
+
+#INSTALL CHROME
+#RUN wget http://chrome.richardlloyd.org.uk/install_chrome.sh
+#RUN chmod u+x install_chrome.sh && ./install_chrome.sh -q -q -d
+
+ADD *_xvfb.sh /usr/bin/
+
+RUN chmod u+x /usr/bin/start_xvfb.sh
+
+COPY createJenkinsNode.py ./
+ENTRYPOINT python createJenkinsNode.py

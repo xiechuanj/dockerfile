@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1  
+kind: Deployment  
+metadata:  
+  name: gpudemo
+spec:  
+  replicas: 1  
+  strategy:  
+    type: RollingUpdate  
+    rollingUpdate:  
+      maxSurge: 2  
+      maxUnavailable: 0  
+  template:  
+    metadata:  
+      labels:  
+        app: gpudemo
+    spec:  
+      containers:  
+      - name: gpudemo 
+        image: gpudemo:1.0.0
+        imagePullPolicy: IfNotPresent  
+        ports:  
+        - containerPort: 
+          name: web  
+          protocol: TCP
+        - containerPort: 
+          name: agent  
+          protocol: TCP
+        resources:
+          requests:
+            alpha.kubernetes.io/nvidia-gpu: 1
+          limits:
+            alpha.kubernetes.io/nvidia-gpu: 1
+        volumeMounts:  
+        - name: nvidia-driver-367-48  
+          mountPath: /usr/local/nvidia
+          readOnly: true  
+        env:  
+        - name: jenkinsParas
+          value: "{'jenkinsUrl':'http://jenkins:8080','username':'admin','password':'admin','nodename':'gpudemo'}"
+      volumes:  
+      - name: nvidia-driver-367-48
+        hostPath:  
+          path: /var/lib/nvidia-docker/volumes/nvidia_driver/367.48 
+      nodeSelector:
+        role: gpu
